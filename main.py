@@ -22,9 +22,11 @@ def to_df(lm):
 
     row, location = lm
 
+    street = location.formatted_address.split(",")[0]
+
     return pd.DataFrame({
         'Full name': [row['First Name'] + ' ' + row['Last Name']],
-        'Address line 1': [location.street_number + ' ' + location.route],
+        'Address line 1': [street],
         'City': [location.city],
         'State/Province': [location.country_shortcut],
         'ZIP/Postal Code': [location.postal_code],
@@ -51,7 +53,7 @@ def main():
 
     addrs = pd.concat(things)
 
-    addrs.to_csv("test.csv")
+    addrs.to_csv(sys.argv[2])
 
 if __name__ == "__main__":
     main()
