@@ -18,7 +18,7 @@ def get_location_model(row):
 
 def to_df(lm):
     if lm is None:
-        return pd.DataFrame()
+        return
 
     row, location = lm
 
@@ -27,10 +27,11 @@ def to_df(lm):
     return pd.DataFrame({
         'Full name': [row['First Name'] + ' ' + row['Last Name']],
         'Address line 1': [street],
-        'City': [location.city],
-        'State/Province': [location.country_shortcut],
-        'ZIP/Postal Code': [location.postal_code],
-        'Country': [location.country]
+        'Address line 2': [None],
+        'City': [str(location.city)],
+        'State/Province': [str(location.country_shortcut)],
+        'ZIP/Postal code': [str(location.postal_code)],
+        'Country': [str(location.country)]
     })
 
 def main():
@@ -39,21 +40,11 @@ def main():
     mailing_addresses = guest_list[existing]
     locations = map(lambda row: get_location_model(row[1]), mailing_addresses.iterrows())
 
-    df = pd.DataFrame(columns=[
-        'Full name',
-        'Address line 1',
-        'Address line 2',
-        'City',
-        'State/Province',
-        'ZIP/Postal Code',
-        'Country'
-        ])
-
     things = map(to_df, locations)
 
     addrs = pd.concat(things)
 
-    addrs.to_csv(sys.argv[2])
+    addrs.to_csv(sys.argv[2], index=False)
 
 if __name__ == "__main__":
     main()
