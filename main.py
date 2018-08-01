@@ -22,16 +22,20 @@ def to_df(lm):
 
     row, location = lm
 
-    street = location.formatted_address.split(",")[0]
+    street, city, state_zip, *country = location.formatted_address.split(", ")
+
+    state_zip = state_zip.split(" ")
+
+    postal_code = location.postal_code.decode("utf-8") if location.postal_code is not None else None
 
     return pd.DataFrame({
         'Full name': [row['First Name'] + ' ' + row['Last Name']],
         'Address line 1': [street],
         'Address line 2': [None],
-        'City': [str(location.city)],
-        'State/Province': [str(location.country_shortcut)],
-        'ZIP/Postal code': [str(location.postal_code)],
-        'Country': [str(location.country)]
+        'City': [location.city.decode("utf-8")],
+        'State/Province': [state_zip[0]],
+        'ZIP/Postal code': [postal_code],
+        'Country': [location.country.decode("utf-8")]
     })
 
 def main():
